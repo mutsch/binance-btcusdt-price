@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: converter-service
+spec:
+  selector:
+    app: converter
+  ports:
+  - protocol: "TCP"
+    port: 2600
+    nodePort: 30600
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: converter
+spec:
+  selector:
+    matchLabels:
+      app: converter
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: converter
+    spec:
+      containers:
+      - name: converter
+        image: converter:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 2600
+        env:
+          - name: MICROSERVICE
+            value: "converter"
+          - name: PORT
+            value: "2600"

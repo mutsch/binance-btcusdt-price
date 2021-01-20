@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crawler
+spec:
+  selector:
+    matchLabels:
+      app: crawler
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: crawler
+    spec:
+      containers:
+      - name: crawler
+        image: crawler:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 2400
+        env:
+          - name: MICROSERVICE
+            value: "crawler"
+          - name: PORT
+            value: "2400"

@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package task;
+
+// Common
+
+message Order {
+  enum OrderType {
+    ASK = 0;
+    BID = 1;
+  }
+
+  OrderType type = 1;
+  double value = 2;
+  double quantity = 3;
+}
+
+// Converter schema
+
+message ConvertAndSaveRequest {
+  repeated Order order_book = 1;
+  int32 timestamp = 2;
+}
+
+message ConvertAndSaveResponse {
+  bool is_success = 1;
+}
+
+service Converter {
+  rpc ConvertAndSave(ConvertAndSaveRequest) returns (ConvertAndSaveResponse);
+}
+
+// Storer schema
+
+message SaveOrderBookRequest {
+  repeated Order order_book = 1;
+  int32 timestamp = 2;
+}
+
+message SaveOrderBookResponse {
+  bool is_success = 1;
+}
+
+message SaveFairPriceRequest {
+  double price = 1;
+  int32 timestamp = 2;
+}
+
+message SaveFairPriceResponse {
+  bool is_success = 1;
+}
+
+service Storer {
+  rpc SaveOrderBook(SaveOrderBookRequest) returns (SaveOrderBookResponse);
+  rpc SaveFairPrice(SaveFairPriceRequest) returns (SaveFairPriceResponse);
+}

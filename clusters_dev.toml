@@ -1,0 +1,21 @@
+# host.docker.internal should be replaced since we know static IP of our server(s)
+
+[microservice_crawler]
+cluster_host = "host.docker.internal"
+cluster_port = "30400"
+node_port = "2400"
+
+[microservice_converter]
+cluster_host = "host.docker.internal"
+cluster_port = "30600"
+node_port = "2600"
+
+[microservice_storer]
+cluster_host = "host.docker.internal"
+cluster_port = "30500"
+node_port = "2500"
+
+[db_influx]
+cluster_host = "host.docker.internal"
+cluster_port = "8086"
+node_port = ""
