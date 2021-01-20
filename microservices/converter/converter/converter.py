@@ -32,17 +32,17 @@ class ConverterService(test_task_pb2_grpc.ConverterServicer):
         response = False
         try:
             storer_conf = self.configuration.clusters[MICROSERVICE_STORER]
-            with grpc.insecure_channel(storer_conf.cluster_host + ":" + storer_conf.cluster_port) as channel:
+            with grpc.insecure_channel(f"{storer_conf.cluster_host}:{storer_conf.cluster_port}") as channel:
                 stub = test_task_pb2_grpc.StorerStub(channel)
                 request = test_task_pb2.SaveFairPriceRequest(price=value, timestamp=timestamp)
                 response = stub.SaveFairPrice(request).is_success
         except grpc.RpcError as e:
-            logging.info("Exception: " + str(e))
+            logging.info(f"Exception: {e}")
             return False
         return response
 
     def ConvertAndSave(self, request, context):
         logging.info("Convert and save called!")
         result = self.save(self.convert(request.order_book), request.timestamp)
-        logging.info("Result: " + str(result))
+        logging.info(f"Result: {str(result)}")
         return test_task_pb2.ConvertAndSaveResponse(is_success=result)

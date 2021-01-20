@@ -1,9 +1,8 @@
-import logging
 import grpc
-from datetime import *
+from datetime import datetime
 from concurrent import futures
+from influxdb import InfluxDBClient
 from common import *
-from influxdb import *
 
 
 INFLUX_DB_NAME = "test_task_db"
@@ -25,17 +24,17 @@ class Server:
 class StorerService(test_task_pb2_grpc.ConverterServicer):
     def __init__(self, conf: Configuration):
         self.configuration = conf
-        self.connectToDB()
+        self.connect_to_db()
 
-    def connectToDB(self):
+    def connect_to_db(self):
         influx_conf = self.configuration.clusters[DB_INFLUX]
         self.db_client = InfluxDBClient(host=influx_conf.cluster_host, port=influx_conf.cluster_port)
         self.db_client.create_database(INFLUX_DB_NAME)
         self.db_client.switch_database(INFLUX_DB_NAME)
 
     def SaveOrderBook(self, request, context):
-        order_book = OrderBook.deserializeFromProto(request.order_book, request.timestamp)
-        order_book_str = json.dumps(order_book.serializeToJson())
+        order_book = OrderBook.deserialize_from_proto(request.order_book, request.timestamp)
+        order_book_str = json.dumps(order_book.serialize_to_json())
         json_body = [{
             "measurement": ORDER_BOOK_MEASUREMENT,
             "time": datetime.fromtimestamp(request.timestamp).strftime("%Y-%m-%dT%H:%M:%S"),

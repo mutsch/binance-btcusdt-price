@@ -13,7 +13,7 @@ CONFIG_NODE_PORT_FIELD = "node_port"
 
 
 def load_configuration(cluster_name: str, configuration: dict):
-    config = dict()
+    config = {}
     for name, subconf in configuration.items():
         if name.startswith(MS_CONFIG_PREFIX):
             config[name] = Configuration(subconf[CONFIG_CLUSTER_HOST_FIELD],
@@ -29,7 +29,7 @@ def load_configuration(cluster_name: str, configuration: dict):
 
 
 class Configuration:
-    def __init__(self, cluster_host: str, cluster_port: str, node_port=""):
+    def __init__(self, cluster_host: str, cluster_port: str, node_port: str = ""):
         self.cluster_host = cluster_host
         self.cluster_port = cluster_port
         self.node_port = node_port

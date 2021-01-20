@@ -5,10 +5,10 @@ from common.proto import test_task_pb2
 
 class OrderBook:
     def __init__(self):
-        self.bids = dict()
-        self.asks = dict()
+        self.bids = {}
+        self.asks = {}
 
-    def deserializeFromBinanceJson(self, snapshot_json, time: int):
+    def deserialize_from_binance_json(self, snapshot_json: json, time: int):
         self.time = time
 
         for ask in snapshot_json["asks"]:
@@ -23,7 +23,7 @@ class OrderBook:
             quantity = float(quantity)
             self.bids[price] = quantity
 
-    def serializeToJson(self):
+    def serialize_to_json(self):
         return {
             "asks": self.asks,
             "bids": self.bids,
@@ -31,7 +31,7 @@ class OrderBook:
         }
 
     @staticmethod
-    def deserializeFromProto(order_book: list, timestamp: int):
+    def deserialize_from_proto(order_book: list, timestamp: int):
         result = OrderBook()
         result.time = timestamp
         for order in order_book:
@@ -41,8 +41,8 @@ class OrderBook:
                 result.bids[order.value] = order.quantity
         return result
 
-    def serializeToProto(self):
-        order_book = list()
+    def serialize_to_proto(self):
+        order_book = []
         for ask in self.asks:
             order_book.append(test_task_pb2.Order(type=test_task_pb2.Order.OrderType.ASK,
                                                   value=ask,
